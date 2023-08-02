@@ -1,0 +1,45 @@
+library(tidyverse)
+library(knitr)
+library(lavaan)
+library(psych)
+library(MBESS)
+
+setwd("/Users/sulailfatima/Desktop/Megasync/transgenderdata")
+tg.data <- read.spss("Data_transgenderBSSImodification_dataUpdated.sav",
+                     to.data.frame = T,
+                     use.value.labels = TRUE,
+                     trim.factor.names = F,
+                     trim_values = F)
+
+tg.model <- ' # direct effect
+             BSSIScore2 ~ c*SCTotalScore
+           # mediator
+             AKUADSScore2 ~ a*SCTotalScore
+             BSSIScore2 ~ b*AKUADSScore2
+           # indirect effect (a*b)
+             ab := a*b
+           # total effect
+             total := c + (a*b)
+         '
+tg.fit <- sem(tg.model, data = tg.data, se = 'bootstrap', bootstrap = 10000)
+summary(tg.fit,
+        fit.measures = F,
+        standardize = F,
+        rsquare = TRUE)
+
+parameterestimates(tg.fit, boot.ci.type = "bca.simple", standardized = F) %>% 
+  kable()
+
+with(tg.data, MBESS::mediation(x = SCTotalScore, mediator = AKUADSScore2, 
+                               dv = BSSIScore2, bootstrap = TRUE, 
+                               which.boot = "BCa", B = 10000))
+
+with(tg.data, 
+     mediation.effect.plot(x =SCTotalScore  , 
+                           mediator = AKUADSScore2, 
+                           dv = BSSIScore2, 
+                           ylab = "BSSI Score", 
+                           xlab = "AKUADS Score"))
+
+mediate(BSSIScore2 ~ AKUADSScore2 + SCTotalScore , data = tg.data, n.iter = 10000) %>% print(short = F)
+

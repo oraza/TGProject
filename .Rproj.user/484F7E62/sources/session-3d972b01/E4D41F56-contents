@@ -1,0 +1,24 @@
+library(regmedint)
+
+setwd("F:\\Megasync\\transgenderdata")
+data.tg <- readxl::read_xlsx("Data_transgenderBSSImodification_dataUpdated.xlsx", 
+                             sheet = "Sheet1")
+regmedint_obj1 <- regmedint(data = data.tg,
+                            ## Variables
+                            yvar = "BSSIScore2",
+                            avar = "SCTotalScore",
+                            mvar = "AKUADSscore",
+                            cvar = NULL,
+                            #eventvar = "event",
+                            ## Values at which effects are evaluated
+                            a0 = 0,
+                            a1 = 1,
+                            m_cde = 0.1,
+                            c_cond = NULL,
+                            ## Model types
+                            mreg = "linear",
+                            yreg = "linear",
+                            ## Additional specification
+                            interaction = TRUE,
+                            casecontrol = FALSE)
+summary(regmedint_obj1)

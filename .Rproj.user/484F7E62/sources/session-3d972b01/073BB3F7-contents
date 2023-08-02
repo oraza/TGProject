@@ -1,0 +1,73 @@
+library(mediation)
+library(flexplot)
+
+setwd("F:\\Megasync\\transgenderdata")
+data.tg <- readxl::read_xlsx("Data_transgenderBSSImodification_dataUpdated.xlsx", 
+                             sheet = "Sheet1")
+View(data.tg)
+# Scaling
+# data.tg <- scale(data.tg)
+# data.tg <- as.data.frame(data.tg)
+
+# https://mspeekenbrink.github.io/sdam-r-companion/moderation-and-mediation.html
+
+# causal steps
+mod1 <- lm(BSSIScore2 ~ SCTotalScore, data = data.tg)
+mod2 <- lm(AKUADSscore ~ SCTotalScore, data = data.tg)
+mod3 <- lm(BSSIScore2 ~ AKUADSscore + SCTotalScore, data = data.tg)
+mod4 <- lm(BSSIScore2 ~ SCTotalScore*AKUADSscore, data = data.tg)
+
+medmodel.tg <- mediate(model.m = mod2, model.y = mod3,
+                       sims = 10000,
+                       boot = T,
+                       boot.ci.type = "bca",
+                       treat = "SCTotalScore",
+                       mediator = "AKUADSscore")
+summary(medmodel.tg)
+plot(medmodel.tg)
+flexplot::visualize(medmodel.tg)
+summary(mod4)
+plot(mod4)
+
+mediate_plot(BSSIScore2 ~ AKUADSscore + SCTotalScore, data = data.tg)
+library(mediation)
+library(flexplot)
+
+setwd("F:\\Megasync\\transgenderdata")
+data.tg <- readxl::read_xlsx("Data_transgenderBSSImodification_dataUpdated.xlsx", 
+                             sheet = "Sheet1")
+View(data.tg)
+# Scaling
+# data.tg <- scale(data.tg)
+# data.tg <- as.data.frame(data.tg)
+
+# https://mspeekenbrink.github.io/sdam-r-companion/moderation-and-mediation.html
+
+# causal steps
+mod1 <- lm(BSSIScore2 ~ SCTotalScore, data = data.tg)
+mod2 <- lm(AKUADSscore ~ SCTotalScore, data = data.tg)
+mod3 <- lm(BSSIScore2 ~ AKUADSscore + SCTotalScore, data = data.tg)
+mod4 <- lm(BSSIScore2 ~ SCTotalScore*AKUADSscore, data = data.tg)
+
+medmodel.tg <- mediate(model.m = mod2, model.y = mod3,
+                       sims = 10000,
+                       boot = T,
+                       boot.ci.type = "bca",
+                       treat = "SCTotalScore",
+                       mediator = "AKUADSscore")
+summary(medmodel.tg)
+plot(medmodel.tg)
+flexplot::visualize(mod4)
+summary(mod4)
+plot(mod4)
+
+mediate_plot(BSSIScore2 ~ AKUADSscore + SCTotalScore, data = data.tg)
+
+
+data.tg$AKUADSCat2 <- ifelse(data.tg$AKUADSCat2 == "AKU-ADS Positive", 1, 
+                             ifelse(data.tg$AKUADSCat2 == "AKU-ADS Negative", 0,
+                                    NA))
+
+data.tg$AKUADSCat2 <- factor(data.tg$AKUADSCat2, levels = c(0, 1), 
+                        labels = c("Negative", "Positive"))
+

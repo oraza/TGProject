@@ -1,0 +1,21 @@
+library(mediation)
+library(flexplot)
+setwd("F:\\Megasync\\transgenderdata")
+data.tg <- readxl::read_xlsx("Data_transgenderBSSImodification_dataUpdated.xlsx",
+                            sheet = "Sheet1")
+View(data.tg)
+mod4 <- lm(BSSIScore2 ~ SCTotalScore*AKUADSCat2, data = data.tg)
+summary(mod4)
+class(data.tg)
+str(data.tg)
+data.tg$AKUADSCat2 <- ifelse(data.tg$AKUADSCat2 == "AKU-ADS Positive", 1, ifelse(data.tg$AKUADSCat2 == "AKU-ADS Negative", 0, NA))
+str(data.tg)
+data.tg$AKUADSCat2 <- factor(data.tg$AKUADSCat2, levels = c(0, 1),
+                      labels = c("Negative", "Positive"))
+str(data.tg)
+tab data.tg$AKUADSCat2
+tab(data.tg$AKUADSCat2)
+tabulate(data.tg$AKUADSCat2)
+79/230
+lm(BSSIScore2 ~ SCTotalScore + AKUADSCat2, data = data.tg)
+lm(BSSIScore2 ~ SCTotalScore*AKUADSCat2, data = data.tg)

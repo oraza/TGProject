@@ -1,0 +1,192 @@
+# Descriptive & Inferential analysis from spss file
+
+library(foreign)
+library(dplyr)
+library(GGally)
+
+
+setwd("/Users/sulailfatima/Desktop/Megasync/transgenderdata")
+tg.data <- read.spss("Data_transgenderBSSImodification_dataUpdated.sav",
+                     to.data.frame = T,
+                     use.value.labels = TRUE,
+                     trim.factor.names = F,
+                     trim_values = F)
+#View(tg.data)
+# mean & sd of BSSIScore across various indep vars
+# Do you work? 
+mean_sd_SocCap35a <- tg.data %>%
+  group_by(SocCap35a) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# Do you pay the rent?
+mean_sd_SocCap39a <- tg.data %>%
+  group_by(SocCap39a) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# Do you have children less than 18 years old
+mean_sd_SocCap42a <- tg.data %>%
+  group_by(SocCap42a) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# Source of income
+mean_sd_SocCap44a_Rec <- tg.data %>%
+  group_by(SocCap44a_Rec) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# age
+mean_sd_SocCap36aBinned <- tg.data %>%
+  group_by(SocCap36aBinned) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# number of hours working in a week
+mean_sd_SocCap35aaBinned <- tg.data %>%
+  group_by(SocCap35aaBinned) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# type of housing
+mean_sd_SocCap38a <- tg.data %>%
+  group_by(SocCap38a) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# for how long you have been living here
+mean_sd_SocCap40aCat <- tg.data %>%
+  group_by(SocCap40aCat) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# With whom do you live with
+mean_sd_SocCap41a_Rec <- tg.data %>%
+  group_by(SocCap41a_Rec) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# Monthly income
+mean_sd_SocCap45a_Rec <- tg.data %>%
+  group_by(SocCap45a_Rec) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+# Education 
+mean_sd_SocCap46a <- tg.data %>%
+  group_by(SocCap46a) %>%
+  summarise(mean = mean(BSSIScore2, na.rm = TRUE),
+            sd = sd(BSSIScore2, na.rm = TRUE))
+
+
+# t test with are you employed, do you pay rent, have children under 18, 
+# language spoken at home, */source of income*/
+tabulate(tg.data$SocCap35a)
+ttest_SocCap35a <- t.test(BSSIScore2 ~ SocCap35a,
+                          data = tg.data, 
+                          var.equal = F)
+tabulate(tg.data$SocCap39a)
+ttest_SocCap39a <- t.test(BSSIScore2 ~ SocCap39a, 
+                          data = tg.data, 
+                          var.equal = F)  
+tabulate(tg.data$SocCap42a)
+ttest_SocCap42a <- t.test(BSSIScore2 ~ SocCap42a,
+                          data = tg.data, 
+                          var.equal = F)  
+tabulate(tg.data$SocCap44a_Rec)
+ttest_SocCap44a_Rec <- t.test(BSSIScore2 ~ SocCap44a_Rec, 
+                              data = tg.data,
+                              var.equal = F)
+ttest_SocCap35a
+ttest_SocCap39a
+ttest_SocCap42a
+ttest_SocCap44a_Rec
+
+# ANOVA with age, working hours , type of housing, how long have you been 
+# living, who lives with you, monthly income, educational level
+tabulate(tg.data$SocCap36aBinned)
+anova_36a <- (aov(BSSIScore2 ~ SocCap36aBinned,
+                  data = tg.data))
+tabulate(tg.data$SocCap35aaBinned)
+anova_35aa <- (aov(BSSIScore2 ~ SocCap35aaBinned,
+                   data = tg.data))
+tabulate(tg.data$SocCap38a)
+anova_38a <- (aov(BSSIScore2 ~ SocCap38a,
+                  data = tg.data))
+tabulate(tg.data$SocCap40aCat)
+anova_40a <- (aov(BSSIScore2 ~ SocCap40aCat, 
+                  data = tg.data))
+tabulate(tg.data$SocCap41a_Rec)
+anova_41a <- (aov(BSSIScore2 ~ SocCap41a_Rec,
+                  data = tg.data))
+tabulate(tg.data$SocCap45a_Rec)
+anova_45a <- (aov(BSSIScore2 ~ SocCap45a_Rec,
+                  data = tg.data))
+tabulate(tg.data$SocCap46a)
+anova_46a <- (aov(BSSIScore2 ~ SocCap46a, 
+                  data = tg.data))
+summary(anova_36a)
+summary(anova_35aa)
+summary(anova_38a)
+summary(anova_40a)
+summary(anova_41a)
+summary(anova_45a)
+summary(anova_46a)
+####following analysis can be ignored
+# finding relationship between SC and other indep vars
+# source of income SocCap44a_Rec
+# working hours anova_35aa
+# Type of housing anova_38a
+# how long you have been living in same place anova_40a
+# monthly income anova_45a
+ 
+ttest_SC_sourceinc <- t.test(SCTotalScore ~ SocCap44a_Rec, 
+                              data = tg.data,
+                              var.equal = F)
+anova_SC_whours <- (aov(SCTotalScore ~ SocCap35aaBinned,
+                   data = tg.data))
+anova_SC_housetype <- (aov(SCTotalScore ~ SocCap38a,
+                  data = tg.data))
+anova_SC_livingdur <- (aov(SCTotalScore ~ SocCap40a,
+                           data = tg.data))
+######
+######
+
+# Plotting
+# 
+ggpairs(tg.data,
+        axisLabels = "none",
+        columns=c("SCTotalScore", "BSSIScore2", "SCFacA",	"SCFacB",	"SCFacC",	"SCFacD",
+                  "SCFacE", "SCFacF",	"SCFacG",	"SCFacH"),
+        columnLabels = c("Total Score", "BSSI", "Participation", "Agency", "Trust",
+                         "Connection", "F&F", "Tolerance","Value of life",
+                         "Work"),
+        upper = list(continuous = wrap(ggally_cor,
+                                       method = "spearman",
+                                       digits = 2,
+                                       size = 4, colour = "#756BB1")),
+        lower = list(continuous = wrap("smooth",
+                                       color = "#31A354",
+                                       se=TRUE,
+                                       alpha = 1,
+                                       size = 0.2)),
+        diag = list(continuous = wrap("densityDiag",
+                                      alpha = 0.1)),
+        title = "Scatterplot matrix of Beck Suicidal Ideation Score with Factors of Social Capital")
+ggsave("test.pdf", units="in", width=10, height=10, dpi=300)
+
+ggpairs(tg.data,
+        axisLabels = "none",
+        columns=c("SCTotalScore", "BSSIScore2"),
+        columnLabels = c("SC Total", "BSSI Score"),
+        upper = list(continuous = wrap(ggally_cor, 
+                                       method = "spearman", 
+                                       size = AKUADSScore2)),
+        lower = list(continuous = wrap("smooth",
+                                       se=TRUE,
+                                       alpha = 0.3,
+                                       size = .5,
+                                       color = ~AKUADSScore2),
+                     scale_colour_gradient(low = "green", high = "red")),
+        diag = list(continuous = wrap("densityDiag", 
+                                      alpha = 0.2,
+                                      size = 0.1)),
+        title = "Scatterplot matrix of Social Capital Factors") 
+
+
+
+
+
+
+

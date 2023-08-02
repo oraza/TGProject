@@ -1,0 +1,32 @@
+library(medflex)
+data("UPBdata")
+head(UPBdata)
+
+# mediator: negaff
+# predictor: att
+# outcome: UPB
+
+# data
+setwd("F:\\Megasync\\transgenderdata")
+data.tg <- readxl::read_xlsx("Data_transgenderBSSImodification_dataUpdated.xlsx", 
+                             sheet = "Sheet1")
+
+data.tg2 <- read.csv("Data_transgenderBSSImodification_dataUpdatedfromspss.csv")
+
+
+medFit <- glm(AKUADSscore ~ SCTotalScore,
+              family = gaussian, data = data.tg)
+w <- weights(medFit)
+neMod1 <- neModel(BSSIScore2 ~ SCTotalScore0  + SCTotalScore1,
+                  expData = medFit)
+
+# using this paper file:///C:/Users/OWAIS/Downloads/v76i11.pdf page 24
+# on this paper https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7853644/pdf/nihms-1599745.pdf page 10
+
+expData2 <-neImpute(BSSIScore2 ~ SCTotalScore*AKUADSscore, data= data.tg)
+neMod2 <-neModel(BSSIScore2 ~ SCTotalScore0*SCTotalScore1, expData = expData2, se="bootstrap", nBoot = 1000)
+neMod2eff<-neEffdecomp(neMod2)
+summary(neMod2eff)
+confint(neMod2eff, level=.95, type="perc")
+
+expFit <- glm()

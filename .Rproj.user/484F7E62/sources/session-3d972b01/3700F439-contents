@@ -1,0 +1,23 @@
+#ROC for SCTotalScore
+#
+range(tg.data$SCTotalScore)
+hist(tg.data$SCTotalScore)
+
+tg.data$SCTotalScore_bin <- cut(tg.data$SCTotalScore, 
+                                breaks = c(-Inf, 50, Inf))
+library(pROC)
+
+# Create a data frame with two columns: `x` and `y`.
+data <- data.frame(x = rnorm(100), y = rbinom(100, 1, 0.5))
+
+# Fit a logistic regression model to the data.
+model.2 <- glm(SCTotalScore_bin ~ BSSIScore2, data = tg.data, family = "binomial")
+
+# Predict the probability of each observation being positive.
+probs <- predict(model.2, type = "response")
+
+# Create a ROC curve.
+roc <- roc(tg.data$SCTotalScore_bin, probs)
+
+# Plot the ROC curve.
+plot(roc)
