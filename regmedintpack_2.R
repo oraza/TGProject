@@ -89,6 +89,7 @@ vectors.cde <- vectors.cde %>%
 #View(vectors.cde)
 vectors.cde <-vectors.cde[order(vectors.cde$cde_est),]
 library(ggplot2)
+
 ggplot(data = vectors.cde, aes(x = akuads, y = cde_est)) +
   annotate("rect",xmin=20,xmax=45,ymin=-Inf,ymax=Inf,alpha=0.4,fill="red2") +
   #geom_hline(yintercept = 0.0, linetype = "dashed", color = "green", size = 1) +

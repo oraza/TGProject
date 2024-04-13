@@ -25,9 +25,9 @@ tg.data$stdakuads <- ((tg.data$AKUADSScore2 - ave.akuads)/sd.akuads)
 # variable to scale them 
 regmedint_obj1 <- regmedint(data = tg.data,
                             ## Variables
-                            yvar = "stdbssi",
-                            avar = "stdsc",
-                            mvar = "stdakuads",
+                            yvar = "BSSIScore2",
+                            avar = "SCTotalScore",
+                            mvar = "AKUADSScore2",
                             cvar = NULL,
                             #eventvar = "event",
                             ## Values at which effects are evaluated
